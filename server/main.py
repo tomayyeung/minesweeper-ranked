@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from server.game import GameState
-import asyncio, json
+import time, json
 
 app = FastAPI()
 rooms = {} # room_name: {"board": [[...]], "players": [WebSocket, ...]}
@@ -75,14 +75,15 @@ async def websocket_endpoint(ws: WebSocket, room_name: str):
                     # Check for win
                     if len(game.revealed[player_num]) == rows * cols - mines:
                         print("Player has found all safe squares!")
-                        await ws.send_text(json.dumps({"type": "end", "result": "win"}))
+                        time_taken = time.time() - game.start_time
+                        await ws.send_text(json.dumps({"type": "end", "result": "win", "time": time_taken}))
 
                         # Notify other players; iterate over a copy to allow removals
                         for player in list(room["players"]):
                             res = "win" if player is ws else "lose"
 
                             try:
-                                await player.send_text(json.dumps({"type": "end", "result": res}))
+                                await player.send_text(json.dumps({"type": "end", "result": res, "time": time_taken}))
                             except Exception:
                                 # if send fails, remove the player
                                 try:

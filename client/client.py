@@ -61,7 +61,7 @@ async def handle_server(uri):
                     found = event["found_count"]
                 # End game
                 elif event["type"] == "end":
-                    print(event["result"])
+                    print(event["result"], "Time:", event.get("time", "N/A"))
                     running = False
             except asyncio.TimeoutError:
                 pass
