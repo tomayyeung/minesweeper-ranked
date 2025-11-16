@@ -1,7 +1,4 @@
-import asyncio
-import pygame
-import websockets
-import json
+import pygame, asyncio, websockets, json
 
 WIDTH, HEIGHT = 400, 500
 # ROWS, COLS = 10, 10
@@ -19,6 +16,13 @@ async def handle_server(uri):
 
         # Wait for board from server
         data = json.loads(await ws.recv())
+        print("Waiting, players:", data.get("players", 0))
+
+        # waiting for start message
+        while True:
+            data = json.loads(await ws.recv())
+            if data.get("event") == "start":
+                break
         rows, cols, mines = data["rows"], data["cols"], data["mines"]
         to_be_found = rows * cols - mines
 
@@ -61,7 +65,11 @@ async def handle_server(uri):
                     found = event["found_count"]
                 # End game
                 elif event["type"] == "end":
-                    print(event["result"], "Time:", event.get("time", "N/A"))
+                    finish_time = event.get("time", None)
+                    if finish_time:
+                        print(event["result"], "Time:", finish_time)
+                    else:
+                        print(event["result"], "Time: N/A")
                     running = False
             except asyncio.TimeoutError:
                 pass
@@ -89,4 +97,4 @@ async def handle_server(uri):
 
 
 if __name__ == "__main__":
-    asyncio.run(handle_server("ws://localhost:8000/ws/testroom"))
+    asyncio.run(handle_server("ws://localhost:8765/ws/testroom"))

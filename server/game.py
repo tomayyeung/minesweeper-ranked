@@ -7,8 +7,11 @@ class GameState:
         self.mines = mines
         self.board = self.generate_board(width, height, mines, seed)
 
-        self.revealed = [set() for _ in range(players)]
+        self.revealed = {player: set() for player in players}
+        print(players)
         self.start_time = time.time()
+
+        self.players_left = players
 
 
     @staticmethod
@@ -68,3 +71,6 @@ class GameState:
                             stack.append((nr, nc))
         print(len(revealed))
         return revealed
+
+    def check_win(self, player_id):
+        return len(self.revealed[player_id]) == self.width * self.height - self.mines
