@@ -8,7 +8,7 @@ class GameState:
         self.board = self.generate_board(width, height, mines, seed)
 
         self.revealed = {player: set() for player in players}
-        print(players)
+        # print(players)
         self.start_time = time.time()
 
         self.players_left = players

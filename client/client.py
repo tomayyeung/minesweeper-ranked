@@ -1,4 +1,4 @@
-import pygame, asyncio, websockets, json
+import pygame, asyncio, websockets, json, sys
 
 WIDTH, HEIGHT = 400, 500
 # ROWS, COLS = 10, 10
@@ -95,6 +95,11 @@ async def handle_server(uri):
             pygame.display.flip()
             clock.tick(60)
 
+        pygame.quit()
 
 if __name__ == "__main__":
-    asyncio.run(handle_server("ws://localhost:5001/ws/testroom"))
+    if len(sys.argv) > 1:
+        room = sys.argv[1]
+    else:
+        room = "testroom"
+    asyncio.run(handle_server(f"ws://localhost:5001/{room}"))
