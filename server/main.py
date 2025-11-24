@@ -3,8 +3,8 @@ import asyncio
 from server import handle_main # type: ignore
 
 async def main():
-    async with websockets.serve(handle_main, "localhost", 8765):
-        print("Server running on ws://localhost:8765")
+    async with websockets.serve(handle_main, "0.0.0.0", 8765):
+        print("Server running on ws://0.0.0.0:8765")
         await asyncio.Future()  # run forever
 
 if __name__ == "__main__":

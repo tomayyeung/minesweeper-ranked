@@ -97,4 +97,4 @@ async def handle_server(uri):
 
 
 if __name__ == "__main__":
-    asyncio.run(handle_server("ws://localhost:8765/ws/testroom"))
+    asyncio.run(handle_server("ws://localhost:5001/ws/testroom"))
