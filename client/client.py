@@ -102,4 +102,4 @@ if __name__ == "__main__":
         room = sys.argv[1]
     else:
         room = "testroom"
-    asyncio.run(handle_server(f"ws://localhost:5001/{room}"))
+    asyncio.run(handle_server(f"ws://0.0.0.0:8765/{room}"))
