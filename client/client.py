@@ -1,4 +1,4 @@
-import pygame, asyncio, websockets, json, sys
+import os, pygame, asyncio, websockets, json, sys
 
 WIDTH, HEIGHT = 400, 500
 # ROWS, COLS = 10, 10
@@ -10,7 +10,7 @@ REVEALED_COLOR = (200, 200, 200)
 HIDDEN_COLOR = (100, 100, 100)
 FONT_COLOR = (0, 0, 0)
 
-async def handle_server(uri):
+async def handle_server(uri: str):
     async with websockets.connect(uri) as ws:
         print("Connected to server!")
 
@@ -102,4 +102,16 @@ if __name__ == "__main__":
         room = sys.argv[1]
     else:
         room = "testroom"
-    asyncio.run(handle_server(f"ws://0.0.0.0:8765/{room}"))
+
+    # Use SERVER_WS env var in production, e.g. "wss://minesweeper-ranked.onrender.com"
+    # from your machine
+    # SERVER_WS="wss://minesweeper-ranked.onrender.com" python client/client.py myroom
+
+    server_base = os.environ.get("SERVER_WS")
+    if server_base:
+        uri = server_base.rstrip("/") + f"/ws/{room}"
+    else:
+        # Local dev
+        uri = f"ws://localhost:8765/ws/{room}"
+
+    asyncio.run(handle_server(uri))

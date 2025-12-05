@@ -13,4 +13,4 @@ ENV LOG_LEVEL=INFO
 
 EXPOSE 8765
 
-CMD ["python", "server/main.py"]
+CMD uvicorn server.main:app --host 0.0.0.0 --port ${PORT:-8765} --proxy-headers
